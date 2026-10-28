@@ -31,7 +31,7 @@ Hosted CI and Pages must be verified after pushing the code.
    ```
 
 5. Open **Actions → Build, test, benchmark and publish docs**. Confirm the Ubuntu
-   and macOS jobs, Doxygen job and Pages deployment are all green for the pushed
+   build, Doxygen job and Pages deployment are all green for the pushed
    commit. In the benchmark step, check that six benchmark rows with timing
    measurements appear. Download the JSON artifacts if evidence is needed.
 6. Open the Pages URL shown by the `github-pages` deployment and the README link.
@@ -47,6 +47,8 @@ Troubleshooting:
   `id-token: write`, already set in the workflow.
 - **No deployment on a feature branch:** intentional; merge/push to the default
   branch to publish. Tests, benchmarks and HTML artifacts still run on other branches.
+- **Optional macOS check:** select **Run workflow** and enable `run_macos`.
+  Hosted macOS runners may queue; ordinary push and pull-request runs use Ubuntu.
 - **Docs warning:** fix the public API comments or Doxyfile input paths; warnings
   intentionally fail the build.
 - **Only local checks passed:** do not report hosted CI or deployment as verified.

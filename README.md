@@ -38,7 +38,8 @@ SMA (window=3): 101.000000 102.666667 104.333333
 
 For a multi-configuration generator such as Visual Studio, add `--config Release`
 to build commands, `-C Release` to CTest, and run executables from their `Release/`
-subdirectories. CI currently covers Ubuntu and macOS.
+subdirectories. CI runs on Ubuntu by default. The manual workflow offers an
+additional macOS check; the project has also passed local macOS verification.
 
 ## Unit tests
 
@@ -107,8 +108,10 @@ To configure only documentation, also pass `-DQUANT_BUILD_TESTS=OFF` and
 ## Continuous integration and publication
 
 Every push and pull request builds the program, runs the tests and benchmark on
-Ubuntu and macOS, and generates Doxygen documentation on Ubuntu. A manual workflow
-trigger is also available. On a push to the repository's default branch,
+Ubuntu, and generates Doxygen documentation on Ubuntu. A manual workflow trigger
+can additionally enable macOS checks using the `run_macos` option. Keeping macOS
+optional prevents hosted macOS runner queues from blocking ordinary publication.
+On a push to the repository's default branch,
 documentation is deployed to GitHub Pages **after both build jobs and documentation
 generation succeed**. Pull requests and other branches generate documentation
 artifacts without deploying the production site.
@@ -116,7 +119,8 @@ artifacts without deploying the production site.
 Before the first default-branch push, enable **Settings → Pages → Build and
 deployment → Source: GitHub Actions**. The repository must be public for the
 assignment. See [publication and verification instructions](docs/PUBLISHING.md).
-The local project alone does not prove that hosted CI or Pages deployment passed.
+See the [verification record](docs/HOSTED_VALIDATION.md) for hosted evidence and
+the latest workflow run for the current commit's status.
 
 ## Algorithm notes
 

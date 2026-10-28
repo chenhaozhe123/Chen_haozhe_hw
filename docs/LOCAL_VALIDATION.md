@@ -40,7 +40,7 @@ renamed. They were preserved outside the source tree, and both local build
 directories were regenerated using the current path. README build commands now
 work from the project root.
 
-The public repository `chenhaozhe123/Chen_haozhe_hw` exists, and README now contains
-its corresponding Pages URL. **Not yet verified:** uploading this project,
-hosted Ubuntu/macOS GitHub Actions runs and GitHub Pages deployment. Follow
-[PUBLISHING.md](PUBLISHING.md) and verify these before submitting the assignment.
+This record covers local verification. The project has since been pushed to
+`chenhaozhe123/Chen_haozhe_hw`, and README contains its corresponding Pages URL.
+See [HOSTED_VALIDATION.md](HOSTED_VALIDATION.md) and the linked workflow runs for
+hosted build, benchmark and publication evidence.

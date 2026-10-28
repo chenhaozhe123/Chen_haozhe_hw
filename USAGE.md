@@ -82,7 +82,8 @@ Follow [docs/PUBLISHING.md](docs/PUBLISHING.md) to push the project to
 enable Pages and verify the README's configured documentation URL. For the same
 submitted commit, verify that:
 
-- Ubuntu and macOS build, test and benchmark jobs pass.
+- The Ubuntu build, test and benchmark job passes. Additional macOS CI is
+  available through the manual workflow's `run_macos` option.
 - Doxygen generation and GitHub Pages deployment pass.
 - The benchmark step logs six rows with measured timings.
 - The README's online documentation link and API pages load successfully.
