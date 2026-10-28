@@ -112,7 +112,7 @@ Ubuntu, and generates Doxygen documentation on Ubuntu. A manual workflow trigger
 can additionally enable macOS checks using the `run_macos` option. Keeping macOS
 optional prevents hosted macOS runner queues from blocking ordinary publication.
 On a push to the repository's default branch,
-documentation is deployed to GitHub Pages **after both build jobs and documentation
+documentation is deployed to GitHub Pages **after all requested build checks and documentation
 generation succeed**. Pull requests and other branches generate documentation
 artifacts without deploying the production site.
 
