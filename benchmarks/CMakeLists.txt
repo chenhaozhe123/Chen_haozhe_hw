@@ -1,0 +1,2 @@
+add_executable(quant_benchmark benchmark_sma.cpp)
+target_link_libraries(quant_benchmark PRIVATE quant benchmark::benchmark_main)

@@ -1,0 +1,87 @@
+name: Build, test, benchmark and publish docs
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test-benchmark:
+    name: C++17 on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure Release build
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build --parallel 2
+      - name: Run unit tests
+        run: ctest --test-dir build --output-on-failure
+      - name: Run demo
+        run: ./build/quant_demo
+      - name: Measure performance (also visible in this log)
+        run: >-
+          ./build/benchmarks/quant_benchmark
+          --benchmark_min_time=0.05s
+          --benchmark_out=build/benchmark.json
+          --benchmark_out_format=json
+      - name: Save benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-${{ matrix.os }}
+          path: build/benchmark.json
+          if-no-files-found: error
+
+  documentation:
+    name: Generate Doxygen documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Doxygen
+        run: sudo apt-get update && sudo apt-get install --yes doxygen
+      - name: Configure documentation target
+        run: >-
+          cmake -S . -B build-docs
+          -DQUANT_BUILD_TESTS=OFF
+          -DQUANT_BUILD_BENCHMARKS=OFF
+          -DQUANT_BUILD_DOCS=ON
+      - name: Generate documentation (warnings fail the job)
+        run: cmake --build build-docs --target docs
+      - name: Save documentation for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: doxygen-html
+          path: docs/html
+          if-no-files-found: error
+      - name: Package GitHub Pages site
+        if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/html
+
+  deploy-pages:
+    name: Publish documentation to GitHub Pages
+    if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    needs: [build-test-benchmark, documentation]
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - name: Deploy documentation
+        id: deployment
+        uses: actions/deploy-pages@v4
